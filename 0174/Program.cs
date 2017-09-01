@@ -6,60 +6,38 @@ namespace _0174
     {
         public class Solution
         {
+            private int GetHP(int[,] hp, int m, int n, int i, int j)
+            {
+                if (i == m - 1 && j == n || i == m && j == n - 1)
+                {
+                    return 1;
+                }
+                else if (i == m || j == n)
+                {
+                    return Int32.MaxValue;
+                }
+                else
+                {
+                    return hp[i, j];
+                }
+            }
+
             public int CalculateMinimumHP(int[,] dungeon)
             {
                 var m = dungeon.GetLength(0);
                 var n = dungeon.GetLength(1);
 
-                var lowesthp = new int[m, n];
-                var currenthp = new int[m, n];
-
-                for (var i = 0; i < m; ++i)
+                var hp = new int[m, n];
+                
+                for (var i = m - 1; i >= 0; --i)
                 {
-                    for (var j = 0; j < n; ++j)
+                    for (var j = n - 1; j >= 0; --j)
                     {
-                        if (i == 0 && j == 0)
-                        {
-                            currenthp[i, j] = dungeon[i, j];
-                            lowesthp[i, j] = dungeon[i, j] < 0 ? dungeon[i, j] : 0;
-                        }
-                        else if (i == 0)
-                        {
-                            currenthp[i, j] = dungeon[i, j] + currenthp[i, j - 1];
-                            lowesthp[i, j] = currenthp[i, j] < 0 ? Math.Min(currenthp[i, j], lowesthp[i, j - 1]) :
-                                                                    Math.Min(0, lowesthp[i, j - 1]);
-                        }
-                        else if (j == 0)
-                        {
-                            currenthp[i, j] = dungeon[i, j] + currenthp[i - 1, j];
-                            lowesthp[i, j] = currenthp[i, j] < 0 ? Math.Min(currenthp[i, j], lowesthp[i - 1, j]) :
-                                                                    Math.Min(0, lowesthp[i - 1, j]);                            
-                        }
-                        else
-                        {
-                            var currenthp_down = dungeon[i, j] + currenthp[i - 1, j];
-                            var lowesthp_down = currenthp_down < 0 ? Math.Min(currenthp_down, lowesthp[i - 1, j]) :
-                                                                    Math.Min(0, lowesthp[i - 1, j]);
-
-                            var currenthp_right = dungeon[i, j] + currenthp[i, j - 1];
-                            var lowesthp_right = currenthp_right < 0 ? Math.Min(currenthp_right, lowesthp[i, j - 1]) :
-                                                                    Math.Min(0, lowesthp[i, j - 1]);
-
-                            if (lowesthp_down > lowesthp_right)
-                            {
-                                currenthp[i, j] = currenthp_down;
-                                lowesthp[i, j] = lowesthp_down;
-                            }
-                            else
-                            {
-                                currenthp[i, j] = currenthp_right;
-                                lowesthp[i, j] = lowesthp_right;
-                            }
-                        }
+                        hp[i, j] = Math.Max(1, Math.Min(GetHP(hp, m, n, i, j + 1), GetHP(hp, m, n, i + 1, j)) - dungeon[i, j]);
                     }
                 }
 
-                return -lowesthp[m - 1, n - 1] + 1;
+                return hp[0, 0];
             }
         }
 
