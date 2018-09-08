@@ -45,7 +45,8 @@ namespace _0301
                         }
                     }
 
-                    break;
+                    // don't need to check reverse version, since current s has more Parenthese 2
+                    return;
                 }
             }
 
@@ -53,7 +54,7 @@ namespace _0301
             {
                 DFS(ReverseString(s), 0, 0, Result, Parentheses2);
             }
-            else if (counter == 0)
+            else // if (counter == 0)
             {
                 Result.Add(ReverseString(s));
             }
