@@ -57,6 +57,43 @@ namespace _0253
     {
         public int MinMeetingRooms(Interval[] intervals)
         {
+            // the goal is to find out largest interval overlapping times at any moment
+            // actually we don't need to keep start time and end time together for one specified interval
+            // it's the same as asking for nested level for brackets ((()))
+            var timeLines = new List<(int Time, int Value)>(intervals.Length << 1);
+
+            foreach (var interval in intervals)
+            {
+                timeLines.Add((interval.start, 1));
+                timeLines.Add((interval.end, -1));
+            }
+
+            // end event comes first when two events have the same time
+            timeLines.Sort((x, y) =>
+            {
+                if (x.Time == y.Time)
+                {
+                    return x.Value - y.Value;
+                }
+                else
+                {
+                    return x.Time - y.Time;
+                }
+            });
+
+            var ans = 0;
+            var counter = 0;
+            foreach (var timeLine in timeLines)
+            {
+                counter += timeLine.Value;
+                ans = Math.Max(ans, counter);
+            }
+
+            return ans;
+        }
+
+        public int MinMeetingRooms_PQ(Interval[] intervals)
+        {
             Array.Sort(intervals, (x, y) =>
             {
                 if (x.start == y.start)
