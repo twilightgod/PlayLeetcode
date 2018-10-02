@@ -41,24 +41,25 @@ namespace _0023
             while (pq.Count > 0)
             {
                 var top = pq.First();
-                current.next = new ListNode(top.Key);
-                current = current.next;
-                
                 // Dequeue
-                var topnode = top.Value.Dequeue();
+                var topNode = top.Value.Dequeue();
                 if (top.Value.Count == 0)
                 {
                     pq.Remove(top.Key);
                 }
-                if (topnode.next != null)
+                
+                current.next = topNode;
+                current = current.next;
+                
+                if (topNode.next != null)
                 {
-                    var val = topnode.next.val;
+                    var val = topNode.next.val;
                     if (!pq.ContainsKey(val))
                     {
                         pq[val] = new Queue<ListNode>();    
                     }
                     
-                    pq[val].Enqueue(topnode.next);
+                    pq[val].Enqueue(topNode.next);
                 }
             }
 
