@@ -23,7 +23,13 @@ namespace _0218
             );
 
             var answers = new List<int[]>();
-            var bst = new SortedDictionary<int, int>();
+            
+            var bst = new SortedDictionary<int, int>
+            (Comparer<int>.Create(
+                (a, b) => 
+                -a.CompareTo(b)
+                )
+            );
             bst[0] = 1;
 
             for (var i = 0; i < (n << 1); ++i)
@@ -35,7 +41,7 @@ namespace _0218
                 {
                     if (!bst.ContainsKey(h))
                     {
-                        if (h > bst.Keys.Max())
+                        if (h > bst.Keys.First())
                         {
                             answers.Add(new int[]{events[i].x, h});
                         }
@@ -48,9 +54,9 @@ namespace _0218
                     if (--bst[h] == 0)
                     {
                         bst.Remove(h);
-                        if (h > bst.Keys.Max())
+                        if (h > bst.Keys.First())
                         {
-                            answers.Add(new int[]{events[i].x, bst.Keys.Max()});
+                            answers.Add(new int[]{events[i].x, bst.Keys.First()});
                         }
                     }
                 }
