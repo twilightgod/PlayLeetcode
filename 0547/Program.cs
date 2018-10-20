@@ -1,19 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace _0684
+namespace _0547
 {
     public class UnionFind
     {
-        Dictionary<int, int> root = new Dictionary<int, int>();
-        Dictionary<int, int> rank = new Dictionary<int, int>();
+        int[] root = null;
+        int[] rank = null;
+
+        //[1, capacity]
+        public UnionFind(int capacity)
+        {
+            root = new int[capacity + 1];
+            rank = new int[capacity + 1];
+        }
 
         public int Find(int x)
         {
-            if (!root.ContainsKey(x))
+            if (root[x] == 0)
             {
                 root[x] = x;
                 rank[x] = 0;
+                ForestCount++;
             }
             else if (root[x] != x)
             {
@@ -41,31 +48,31 @@ namespace _0684
                     root[y] = x;
                     rank[x]++;
                 }
+                ForestCount--;
             }
         }
+
+        public int ForestCount { private set; get; } = 0;
     }
 
     public class Solution
     {
-        public int[] FindRedundantConnection(int[,] edges)
+        public int FindCircleNum(int[,] M)
         {
-            var uf = new UnionFind();
-
-            for (var i = 0; i < edges.Length; ++i)
+            var n = M.GetLength(0);
+            var uf = new UnionFind(n + 1);
+            for (var i = 0; i < n; ++i)
             {
-                var x = uf.Find(edges[i, 0]);
-                var y = uf.Find(edges[i, 1]);
-                if (x == y)
+                for (var j = 0; j < n; ++j)
                 {
-                    return new int[]{edges[i, 0], edges[i, 1]};
-                }
-                else
-                {
-                    uf.Union(x, y);
+                    if (M[i, j] == 1)
+                    {
+                        uf.Union(i + 1, j + 1);
+                    }
                 }
             }
 
-            return null;
+            return uf.ForestCount;
         }
     }
 

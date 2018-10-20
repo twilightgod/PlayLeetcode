@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace _0685
+namespace _0685_1
 {
     public class UnionFind
     {
@@ -14,7 +14,6 @@ namespace _0685
             {
                 root[x] = x;
                 rank[x] = 0;
-                ForestCount++;
             }
             else if (root[x] != x)
             {
@@ -42,72 +41,71 @@ namespace _0685
                     root[y] = x;
                     rank[x]++;
                 }
-                ForestCount--;
             }
         }
-
-        public int ForestCount {private set;get;} = 0;
     }
 
     public class Solution
     {
         public int[] FindRedundantDirectedConnection(int[,] edges)
         {
-            for (var i = edges.GetLength(0) - 1; i >= 0; --i)
+            // assume all node id is within the range
+            var n = edges.GetLength(0);
+            var parent = new int[n + 1];
+            int[] answer1 = null;
+            int[] answer2 = null;
+
+            // check if a node has two parents
+            for (var i = 0; i < n; ++i)
             {
-                if (IsValidTree(edges, i))
+                var x = edges[i, 0];
+                var y = edges[i, 1];
+                if (parent[y] > 0)
                 {
-                    return new int[]{edges[i, 0], edges[i, 1]};
+                    answer1 = new int[]{x, y};
+                    answer2 = new int[]{parent[y], y};
+                    break;
+                }
+                else
+                {
+                    parent[y] = x;
                 }
             }
-            return null;
-        }
 
-        private bool IsValidTree(int[,] edges, int removedIndex)
-        {
-            var inDegree0 = new HashSet<int>();
-            var inDegree1 = new HashSet<int>();
             var uf = new UnionFind();
-
-            for (var i = 0; i < edges.GetLength(0); ++i)
+            for (var i = 0; i < n; ++i)
             {
-                if (i == removedIndex)
+                var x = edges[i, 0];
+                var y = edges[i, 1];
+                if (answer1 != null && answer1[0] == x && answer1[1] == y)
                 {
+                    // remove answer1
                     continue;
                 }
 
-                var x = edges[i, 0];
-                var y = edges[i, 1];
-
-                // init in-degree for new node
-                if (!inDegree0.Contains(x) && !inDegree1.Contains(x))
+                var rootx = uf.Find(x);
+                var rooty = uf.Find(y);
+                // found circle
+                if (rootx == rooty)
                 {
-                    inDegree0.Add(x);
-                }
-                if (!inDegree0.Contains(y) && !inDegree1.Contains(y))
-                {
-                    inDegree0.Add(y);
-                }
-
-                // increase in-degree for y
-                if (inDegree0.Contains(y))
-                {
-                    inDegree0.Remove(y);
-                    inDegree1.Add(y);
-                    if (inDegree0.Count == 0)
+                    if (answer1 == null)
                     {
-                        return false;
+                        // no nodes with two parents, so remove this edge
+                        return new int[]{x, y};
+                    }
+                    else
+                    {
+                        // found circle without answer1, so remove answer2
+                        return answer2;
                     }
                 }
-                else if (inDegree1.Contains(y))
+                else
                 {
-                    return false;
+                    uf.Union(rootx, rooty);
                 }
-
-                uf.Union(x, y);
             }
 
-            return uf.ForestCount == 1;
+            return answer1;
         }
     }
 

@@ -1,21 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace _0684
+namespace _0323
 {
     public class UnionFind
     {
-        Dictionary<int, int> root = new Dictionary<int, int>();
-        Dictionary<int, int> rank = new Dictionary<int, int>();
+        List<int> root = new List<int>();
+        List<int> rank = new List<int>();
+
+        //[1, capacity]
+        public UnionFind(int capacity)
+        {
+            for (var i = 0; i < capacity; ++i)
+            {
+                root.Add(i);
+                rank.Add(0);
+            }
+            ForestCount = capacity;
+        }
 
         public int Find(int x)
         {
-            if (!root.ContainsKey(x))
-            {
-                root[x] = x;
-                rank[x] = 0;
-            }
-            else if (root[x] != x)
+            if (root[x] != x)
             {
                 root[x] = Find(root[x]);
             }
@@ -41,31 +48,24 @@ namespace _0684
                     root[y] = x;
                     rank[x]++;
                 }
+                ForestCount--;
             }
         }
+
+        public int ForestCount { private set; get; } = 0;
     }
 
     public class Solution
     {
-        public int[] FindRedundantConnection(int[,] edges)
+        public int CountComponents(int n, int[,] edges)
         {
-            var uf = new UnionFind();
-
-            for (var i = 0; i < edges.Length; ++i)
+            var uf = new UnionFind(n);
+            for (var i = 0; i < edges.GetLength(0); ++i)
             {
-                var x = uf.Find(edges[i, 0]);
-                var y = uf.Find(edges[i, 1]);
-                if (x == y)
-                {
-                    return new int[]{edges[i, 0], edges[i, 1]};
-                }
-                else
-                {
-                    uf.Union(x, y);
-                }
+                uf.Union(edges[i, 0], edges[i, 1]);
             }
 
-            return null;
+            return uf.ForestCount;
         }
     }
 
