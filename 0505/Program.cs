@@ -31,6 +31,10 @@ namespace _0505
                 {
                     return node.d - 1;
                 }
+                if (node.d < distance[node.x, node.y])
+                {
+                    continue;
+                }
                 for (var i = 0; i < 4; ++i)
                 {
                     var newx = node.x;
@@ -41,11 +45,7 @@ namespace _0505
                         d++;
                         newx += moves[i, 0];
                         newy += moves[i, 1];
-                        if (newx < -1 || newy < -1 || newx > m || newy > n)
-                        {
-                            break;
-                        }
-                        else if (newx == -1 || newy == -1 || newx == m || newy == n || maze[newx, newy] == 1)
+                        if (newx == -1 || newy == -1 || newx == m || newy == n || maze[newx, newy] == 1)
                         {
                             d--;
                             newx -= moves[i, 0];
