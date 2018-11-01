@@ -32,6 +32,7 @@ namespace _0524
                 {
                     return false;
                 }
+                p++;
             }
             return true;
         }
