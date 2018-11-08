@@ -7,33 +7,24 @@ namespace _0125
     {
         public bool IsPalindrome(string s)
         {
-            var cleaneds_sb = new StringBuilder();
-            foreach (var c in s)
-            {
-                var lowc = Char.ToLower(c);
-                if (Char.IsLetterOrDigit(lowc))
-                {
-                    cleaneds_sb.Append(lowc);
-                }
-            }
-            var cleanedc = cleaneds_sb.ToString();
-            
-            if (cleanedc.Length == 0)
-            {
-                return true;
-            }
-
             var l = 0;
-            var r = cleanedc.Length - 1;
+            var r = s.Length - 1;
 
             while (l < r)
             {
-                if (cleanedc[l] != cleanedc[r])
+                while (l < r && !Char.IsLetterOrDigit(s[l]))
+                {
+                    l++;
+                }
+                while (l < r && !Char.IsLetterOrDigit(s[r]))
+                {
+                    r--;
+                }
+                
+                if (l < r && Char.ToLower(s[l++]) != Char.ToLower(s[r--]))
                 {
                     return false;
                 }
-                l++;
-                r--;
             }
 
             return true;

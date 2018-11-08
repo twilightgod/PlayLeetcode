@@ -6,54 +6,15 @@ namespace _0283
     {
         public void MoveZeroes(int[] nums)
         {
-            var lastZeroIndex = -1;
+            var lastNonZeroIndex = 0;
             for (var i = 0; i < nums.Length; ++i)
-            {
-                if (nums[i] == 0)
-                {
-                    lastZeroIndex = i;
-                    break;
-                }
-            }
-
-            var lastNonZeroIndex = -1;
-            for (var i = lastZeroIndex + 1; i < nums.Length; ++i)
             {
                 if (nums[i] != 0)
                 {
-                    lastNonZeroIndex = i;
-                    break;
-                }
-            }
-
-            if (lastZeroIndex == -1 || lastNonZeroIndex == -1)
-            {
-                return;
-            }
-            
-            while (lastZeroIndex < lastNonZeroIndex)
-            {
-                var t = nums[lastNonZeroIndex];
-                nums[lastNonZeroIndex] = nums[lastZeroIndex];
-                nums[lastZeroIndex] = t;
-
-                for (var i = lastZeroIndex + 1; i < nums.Length; ++i)
-                {
-                    if (nums[i] == 0)
-                    {
-                        lastZeroIndex = i;
-                        break;
-                    }
-                }
- 
- 
-                for (var i = lastZeroIndex + 1; i < nums.Length; ++i)
-                {
-                    if (nums[i] != 0)
-                    {
-                        lastNonZeroIndex = i;
-                        break;
-                    }
+                    var t = nums[i];
+                    nums[i] = nums[lastNonZeroIndex];
+                    nums[lastNonZeroIndex] = t;
+                    lastNonZeroIndex++;
                 }
             }
         }

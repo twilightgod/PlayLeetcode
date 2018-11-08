@@ -6,31 +6,31 @@ namespace _0661
     {
         public int[,] ImageSmoother(int[,] M)
         {
-            var delta = new int[8, 2] { { 0, 1 }, { 1, 1 }, { 1, 0 }, { 0, -1 }, { -1, -1 }, { -1, 0 }, { 1, -1 }, { -1, 1 } };
-            var n = M.GetLength(0);
-            var m = M.GetLength(1);
+            var m = M.GetLength(0);
+            var n = M.GetLength(1);
 
-            var ans = new int[n, m];
+            var ans = new int[m, n];
 
-            for (var i = 0; i < n; ++i)
+            for (var i = 0; i < m; ++i)
             {
-                for (var j = 0; j < m; ++j)
+                for (var j = 0; j < n; ++j)
                 {
-                    var validcnt = 1;
-                    var validsum = M[i, j];
-                    for (var k = 0; k < 8; ++k)
+                    var cnt = 0;
+                    var sum = 0;
+                    for (var dx = -1; dx <= 1; ++dx)
                     {
-                        try
+                        for (var dy = -1; dy <= 1; ++dy)
                         {
-                            validsum += M[i + delta[k, 0], j + delta[k, 1]];
-                            validcnt++;
-                        }
-                        catch (IndexOutOfRangeException ex)
-                        {
-
+                            var x = i + dx;
+                            var y = j + dy;
+                            if (x >= 0 && x < m && y >= 0 && y < n)
+                            {
+                                sum += M[x, y];
+                                cnt++;
+                            }
                         }
                     }
-                    ans[i, j] = (int)Math.Floor(validsum * 1.0 / validcnt);
+                    ans[i, j] = (int)Math.Floor(sum * 1.0 / cnt);
                 }
             }
 
