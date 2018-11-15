@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace _0224
+namespace _0227
 {
     public class Solution
     {
@@ -17,7 +17,10 @@ namespace _0224
 
             var tokenizer = new Tokenizer(s);
             var numStack = new Stack<int>();
-            var opStack = new Stack<(int level, char op)>();
+            // rank is (level, priority)
+            // level is parenthese level
+            // priority for + and - is 0, * and / is 1
+            var opStack = new Stack<((int, int) rank, char op)>();
             int level = 0;
 
             while (true)
@@ -44,22 +47,32 @@ namespace _0224
                 }
                 else
                 {
-                    while (opStack.Count > 0 && level <= opStack.Peek().level)
+                    var curop = (char)token;
+                    var priority = curop == '*' || curop == '/' ? 1 : 0;
+                    var currank = (level, priority);
+                    while (opStack.Count > 0 && currank.CompareTo(opStack.Peek().rank) <= 0)
                     {
                         var num1 = numStack.Pop();
                         var num2 = numStack.Pop();
                         var op = opStack.Pop().op;
-                        if (op == '+')
+                        switch (op)
                         {
-                            num2 += num1;
-                        }
-                        else
-                        {
-                            num2 -= num1;
+                            case '+':
+                                num2 += num1;
+                                break;
+                            case '-':
+                                num2 -= num1;
+                                break;
+                            case '*':
+                                num2 *= num1;
+                                break;
+                            case '/':
+                                num2 /= num1;
+                                break;
                         }
                         numStack.Push(num2);
                     }
-                    opStack.Push((level, (char)token));
+                    opStack.Push((currank, curop));
                 }
             }
 
@@ -105,15 +118,9 @@ namespace _0224
                 idx++;
                 return (TokenType.Parenthese, ')');
             }
-            else if (s[idx] == '+')
+            else if (s[idx] == '+' || s[idx] == '-' || s[idx] == '*' || s[idx] == '/')
             {
-                idx++;
-                return (TokenType.Operator, '+');
-            }
-            else if (s[idx] == '-')
-            {
-                idx++;
-                return (TokenType.Operator, '-');
+                return (TokenType.Operator, s[idx++]);
             }
             else
             {
@@ -131,7 +138,6 @@ namespace _0224
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(new Solution().Calculate("2-(8-6+(4-10))"));
             Console.WriteLine("Hello World!");
         }
     }
