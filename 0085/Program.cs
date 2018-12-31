@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace _0084
+namespace _0085
 {
     public class Solution
     {
@@ -32,13 +32,29 @@ namespace _0084
 
             return answer;
         }
+
+        public int MaximalRectangle(char[,] matrix)
+        {
+            var answer = 0;
+            var m = matrix.GetLength(0);
+            var n = matrix.GetLength(1);
+            var heights = new int[n];
+            for (var i = 0; i < m; ++i)
+            {
+                for (var j = 0; j < n; ++j)
+                {
+                    heights[j] = matrix[i, j] == '1' ? heights[j] + 1 : 0;
+                }
+                answer = Math.Max(answer, LargestRectangleArea(heights));
+            }
+            return answer;
+        }
     }
 
     class Program
     {
         static void Main(string[] args)
         {
-            new Solution().LargestRectangleArea(new int[]{2,100,2,1});
             Console.WriteLine("Hello World!");
         }
     }
