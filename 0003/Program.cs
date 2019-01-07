@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace _3
+namespace _0003
 {
     public class Solution 
     {
@@ -13,26 +13,16 @@ namespace _3
             }
             var best = 1;
             var left = 0;
-            var lastpos = new Dictionary<char, int>();
-            lastpos[s[0]] = 0;
+            var charSet = new HashSet<char>();
 
-            for (var right = 1; right < s.Length; ++right)
+            for (var right = 0; right < s.Length; ++right)
             {
-                if (lastpos.ContainsKey(s[right]))
+                while (charSet.Contains(s[right]))
                 {
-                    var lastidx = lastpos[s[right]] + 1;
-                    for (var i = left; i < lastidx; ++i)
-                    {
-                        lastpos.Remove(s[i]);
-                    }
-                    left = lastidx;
+                    charSet.Remove(s[left++]);
                 }
-                else
-                {
-                    best = Math.Max(best, right - left + 1);
-                }
-
-                lastpos[s[right]] = right;           
+                charSet.Add(s[right]);
+                best = Math.Max(best, right - left + 1);
             }
 
             return best;
