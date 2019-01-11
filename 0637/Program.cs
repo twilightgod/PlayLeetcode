@@ -17,43 +17,34 @@ namespace _0637
     {
         public IList<double> AverageOfLevels(TreeNode root)
         {
-            var cnt = new SortedDictionary<int, int>();
-            var sum = new SortedDictionary<int, long>();
-            Traverse(root, 0, sum, cnt);
+            var cnt = new List<int>();
+            var sum = new List<long>();
+            DFS(root, 0, sum, cnt);
             var ans = new List<double>();
-            foreach (var key in sum.Keys)
+            for (var i = 0; i < sum.Count; ++i)
             {
-                ans.Add(sum[key] * 1.0 / cnt[key]);
+                ans.Add(sum[i] * 1.0 / cnt[i]);
             }
             return ans;
         }
 
-        private void Traverse(TreeNode root, int depth, SortedDictionary<int, long> sum, SortedDictionary<int, int> cnt)
+        private void DFS(TreeNode root, int depth, List<long> sum, List<int> cnt)
         {
             if (root == null)
             {
                 return;
             }
 
-            if (sum.ContainsKey(depth))
+            if (depth == sum.Count)
             {
-                sum[depth] += root.val;
+                sum.Add(0);
+                cnt.Add(0);
             }
-            else
-            {
-                sum[depth] = root.val;
-            }
-
-            if (cnt.ContainsKey(depth))
-            {
-                cnt[depth]++;
-            }
-            else
-            {
-                cnt[depth] = 1;
-            }
-            Traverse(root.left, depth + 1, sum, cnt);
-            Traverse(root.right, depth + 1, sum, cnt);
+            sum[depth] += root.val;
+            cnt[depth]++;
+            
+            DFS(root.left, depth + 1, sum, cnt);
+            DFS(root.right, depth + 1, sum, cnt);
         }
     }
 

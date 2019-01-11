@@ -1,38 +1,45 @@
 ﻿using System;
 using System.Text;
 
-namespace _6
+namespace _0006
 {
-    public class Solution {
-    public string Convert(string s, int numRows) {
-        if (numRows == 1)
+    public class Solution
+    {
+        public string Convert(string s, int numRows)
         {
-            return s;
-        }
-        
-        var sb = new StringBuilder();
-        var k = numRows * 2 - 2;
-
-        for (var row = 0; row < numRows; ++row)
-        {
-            for (var i = 0; i < s.Length; ++i)
+            if (numRows == 1)
             {
-                var m = i % k;
-                var targetrow = m < numRows ? m : k - m;
-                if (row == targetrow)
+                return s;
+            }
+
+            var sb = new StringBuilder();
+            // # of elements in one interval
+            var k = numRows * 2 - 2;
+
+            for (var row = 0; row < numRows; ++row)
+            {
+                for (var i = 0; i < s.Length; i += k)
                 {
-                    sb.Append(s[i]);
+                    if (i + row < s.Length)
+                    {
+                        sb.Append(s[i + row]);
+                    }
+                    if (row != 0 && row != numRows - 1 && k - row + i < s.Length)
+                    {
+                        sb.Append(s[k - row + i]);
+                    }
                 }
             }
-        }
 
-        return sb.ToString();
+            return sb.ToString();
+        }
     }
-}
+
     class Program
     {
         static void Main(string[] args)
         {
+            Console.WriteLine(new Solution().Convert("1", 2));
             Console.WriteLine(new Solution().Convert("", 1));
             Console.WriteLine(new Solution().Convert("PAYPALISHIRING", 1));
             Console.WriteLine(new Solution().Convert("PAYPALISHIRING", 3));

@@ -21,9 +21,7 @@ namespace _0226
                 return null;
             }
 
-            var tmp = root.left;
-            root.left = root.right;
-            root.right = tmp;
+            (root.left, root.right) = (root.right, root.left);
 
             InvertTree(root.left);
             InvertTree(root.right);
