@@ -7,16 +7,14 @@ namespace _0268
         public int MissingNumber(int[] nums)
         {
             int x = 0;
-            for (var i = 1; i <= nums.Length; ++i)
+            for (var i = 0; i <= nums.Length; ++i)
             {
                 x ^= i;
+                if (i != nums.Length)
+                {
+                    x ^= nums[i];
+                }
             }
-
-            for (var i = 0; i < nums.Length; ++i)
-            {
-                x ^= nums[i];
-            }
-
             return x;
         }
     }

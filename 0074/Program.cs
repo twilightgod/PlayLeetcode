@@ -15,18 +15,18 @@ namespace _0074
             var n = matrix.GetLength(1);
 
             var l = 0;
-            var r = m - 1;
+            var r = m;
 
-            while (l <= r)
+            while (l < r)
             {
-                var mid = (l + r) / 2;
+                var mid = l + (r - l) / 2;
                 if (matrix[mid, 0] == target)
                 {
                     return true;
                 }
                 else if (matrix[mid, 0] > target)
                 {
-                    r = mid - 1;
+                    r = mid;
                 }
                 else
                 {
@@ -34,26 +34,28 @@ namespace _0074
                 }
             }
 
-            if (r < 0)
+            // l is pointing to the most close and bigger one, target should be in l - 1 row
+            l--;
+            if (l < 0)
             {
                 return false;
             }
 
-            var row = r;
+            var row = l;
 
             l = 0;
-            r = n - 1;
+            r = n;
 
-            while (l <= r)
+            while (l < r)
             {
-                var mid = (l + r) / 2;
+                var mid = l + (r - l) / 2;
                 if (matrix[row, mid] == target)
                 {
                     return true;
                 }
                 else if (matrix[row, mid] > target)
                 {
-                    r = mid - 1;
+                    r = mid;
                 }
                 else
                 {

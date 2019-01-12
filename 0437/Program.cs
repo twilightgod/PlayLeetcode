@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace _0437
 {
@@ -14,39 +15,28 @@ namespace _0437
 
     public class Solution
     {
-        public int PathSum(TreeNode root, int sum)
+        public int PathSum(TreeNode root, int target)
         {
-            return Traverse(root, sum);
+            // key: sum  value: # of ways
+            var ways = new Dictionary<int, int>();
+            ways[0] = 1;
+            return DFS(root, target, 0, ways);
         }
 
-        private int Traverse(TreeNode root, int target)
+        private int DFS(TreeNode root, int target, int sum, Dictionary<int, int> ways)
         {
             if (root == null)
             {
                 return 0;
             }
-
-            return DFS(root, target, 0) + Traverse(root.left, target) + Traverse(root.right, target);
-        }
-
-        private int DFS(TreeNode root, int target, int sum)
-        {
-            if (root == null)
-            {
-                return 0;
-            }
-
-            var ans = 0;
 
             sum += root.val;
-            if (sum == target)
-            {
-                ans++;
-            }
+            var ans = ways.GetValueOrDefault(sum - target);
+            ways[sum] = ways.GetValueOrDefault(sum) + 1;
 
-            ans += DFS(root.left, target, sum);
-            ans += DFS(root.right, target, sum);
+            ans += DFS(root.left, target, sum, ways) + DFS(root.right, target, sum, ways);
 
+            ways[sum]--;
             return ans;
         }
     }

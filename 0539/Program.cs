@@ -13,30 +13,21 @@ namespace _0539
                 return 0;
             }
 
-            if (timePoints.GroupBy(x => x).Where(x => x.Count() > 1).Count() > 0)
-            {
-                return 0;
-            }
-
-            var minutes = new List<int>(timePoints.Count);
+            var minutes = new List<int>();
             foreach(var time in timePoints)
             {
                 var strs = time.Split(':');
-                minutes.Add(Int32.Parse(strs[0]) * 60 + Int32.Parse(strs[1]));
+                var minute = Int32.Parse(strs[0]) * 60 + Int32.Parse(strs[1]);
+                minutes.Add(minute);
+                minutes.Add(minute + 1440);
             }
 
+            minutes.Sort();
+            
             var best = Int32.MaxValue;
-            for (var i = 0; i < minutes.Count; ++ i)
+            for (var i = 0; i < minutes.Count - 1; ++i)
             {
-                for (var j = i + 1; j < minutes.Count; ++j)
-                {
-                    best = Math.Min(
-                        Math.Abs(Math.Abs(minutes[i] - minutes[j]) - 1440), 
-                        Math.Abs(Math.Min(
-                            best,
-                            Math.Abs(minutes[i] - minutes[j]))));
-
-                }
+                best = Math.Min(best, minutes[i + 1] - minutes[i]);
             }
 
             return best;

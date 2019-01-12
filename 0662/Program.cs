@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace _0662
 {
@@ -16,37 +17,38 @@ namespace _0662
     {
         public int WidthOfBinaryTree(TreeNode root)
         {
-            int n = 1000;
-            var max = Enumerable.Repeat(-1, n).ToArray();
-            var min = Enumerable.Repeat(Int32.MaxValue, n).ToArray();
+            var max = new List<long>();
+            var min = new List<long>();
 
             Traverse(root, 0, 0, min, max);
 
-            int ans = 0;
-            for (var i = 0; i < n; ++i)
+            long ans = 0;
+            // potentialy overflow, this solution is not perfect
+            for (var i = 0; i < max.Count; ++i)
             {
                 ans = Math.Max(ans, max[i] - min[i] + 1);
             }
 
-            return ans;
+            return (int)ans;
         }
 
-        private void Traverse(TreeNode root, int depth, int nodenum, int[] min, int[] max)
+        private void Traverse(TreeNode root, int depth, int nodenum, List<long> min, List<long> max)
         {
-            if (nodenum == Int32.MaxValue)
-            {
-                return;
-            }
             if (root == null)
             {
                 return;
             }
 
+            if (min.Count == depth)
+            {
+                min.Add(Int64.MaxValue);
+                max.Add(Int64.MinValue);
+            }
             min[depth] = Math.Min(min[depth], nodenum);
             max[depth] = Math.Max(max[depth], nodenum);
 
-            Traverse(root.left, depth + 1, nodenum * 2, min, max);
-            Traverse(root.right, depth + 1, nodenum * 2 + 1, min, max);
+            Traverse(root.left, depth + 1, nodenum << 1, min, max);
+            Traverse(root.right, depth + 1, (nodenum << 1) + 1, min, max);
         }
     }
 

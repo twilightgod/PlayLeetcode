@@ -2,19 +2,21 @@
 
 namespace _0476
 {
+    /*
+    num          = 00000101
+    mask         = 11111000
+    num ^ (~mask)= 00000010
+     */
     public class Solution
     {
         public int FindComplement(int num)
         {
-            int ans = 0;
-            int k = 0;
-            while (num > 0)
+            var mask = -1;
+            while ((mask & num) > 0)
             {
-                ans += (num % 2 == 0 ? 1 : 0) << k;
-                num >>= 1;
-                k++;
+                mask <<= 1;
             }
-            return ans;
+            return num ^ (~mask);
         }
     }
 

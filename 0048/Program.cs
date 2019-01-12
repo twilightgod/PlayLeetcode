@@ -13,9 +13,7 @@ namespace _0048
             {
                 for (int j = 0; j < n / 2; ++j)
                 {
-                    var tmp = matrix[i, j];
-                    matrix[i, j] = matrix[i, n - j - 1];
-                    matrix[i, n - j - 1] = tmp;
+                    (matrix[i, j], matrix[i, n - j - 1]) = (matrix[i, n - j - 1], matrix[i, j]);
                 }
             }
 
@@ -24,13 +22,9 @@ namespace _0048
             {
                 for (int j = 0; j < n - i - 1; ++j)
                 {
-                    var tmp = matrix[i, j];
-                    matrix[i, j] = matrix[i + (n - i - 1 - j), j + (n - i - 1 - j)];
-                    matrix[i + (n - i - 1 - j), j + (n - i - 1 - j)] = tmp;
+                    (matrix[i, j], matrix[i + (n - i - 1 - j), j + (n - i - 1 - j)]) = (matrix[i + (n - i - 1 - j), j + (n - i - 1 - j)], matrix[i, j]);
                 }
             }
-
-            
         }
     }
 
