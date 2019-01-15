@@ -6,21 +6,16 @@ namespace _0278
     {
         public int FirstBadVersion(int n)
         {
-            var l = 1;
+            var l = 0;
             var r = n;
-            var lowerbound = -1;
 
-            while (l <= r)
+            while (l < r)
             {
-                var m64 = ((long)l + r) / 2;
-                var m = (int)m64;
+                var m = l + (r - l) / 2;
 
-                Console.WriteLine($"{l}, {r}, {m}");
-
-                if (IsBadVersion(m))
+                if (IsBadVersion(m + 1))
                 {
-                    lowerbound = lowerbound == -1 ? m : Math.Min(lowerbound, m);
-                    r = m - 1;
+                    r = m;
                 }
                 else
                 {
@@ -28,7 +23,7 @@ namespace _0278
                 }
             }
 
-            return lowerbound;
+            return l + 1;
         }
     }
 
