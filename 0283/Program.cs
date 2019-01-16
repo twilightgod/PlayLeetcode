@@ -11,9 +11,7 @@ namespace _0283
             {
                 if (nums[i] != 0)
                 {
-                    var t = nums[i];
-                    nums[i] = nums[lastNonZeroIndex];
-                    nums[lastNonZeroIndex] = t;
+                    (nums[i], nums[lastNonZeroIndex]) = (nums[lastNonZeroIndex], nums[i]);
                     lastNonZeroIndex++;
                 }
             }
