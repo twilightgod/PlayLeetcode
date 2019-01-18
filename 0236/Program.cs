@@ -16,11 +16,6 @@ namespace _0236
     {
         public TreeNode LowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q)
         {
-            return FindNode(root, p, q);
-        }
-
-        private TreeNode FindNode(TreeNode root, TreeNode p, TreeNode q)
-        {
             if (root == null)
             {
                 return null;
@@ -34,29 +29,19 @@ namespace _0236
                 return root;
             }
 
-            var LeftResult = FindNode(root.left, p, q);
-            var RightResult = FindNode(root.right, p, q);
+            var leftResult = LowestCommonAncestor(root.left, p, q);
+            var rightResult = LowestCommonAncestor(root.right, p, q);
             
-            if (LeftResult != null && RightResult != null)
+            if (leftResult != null && rightResult != null)
             {
                 // p and q in left and right subtrees, root is LCA
                 return root;
             }
-
-            if (LeftResult != null)
+            else
             {
                 // pass result from subtree to upper level
-                return LeftResult;
+                return leftResult??rightResult;
             }
-
-            if (RightResult != null)
-            {
-                // pass result from subtree to upper level
-                return RightResult;
-            }
-
-            // not found
-            return null;
         }
     }
 

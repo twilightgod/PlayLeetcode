@@ -16,13 +16,21 @@ namespace _0235
     {
         public TreeNode LowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q)
         {
+            if (root == null || p == null || q == null)
+            {
+                return null;
+            }
+
+            var maxVal = Math.Max(p.val, q.val);
+            var minVal = Math.Min(p.val, q.val);
+
             while (true)
             {
-                if (root.val < Math.Min(p.val, q.val))
+                if (root.val < minVal)
                 {
                     root = root.right;
                 }
-                else if (root.val > Math.Max(p.val, q.val))
+                else if (root.val > maxVal)
                 {
                     root = root.left;
                 }
@@ -33,6 +41,7 @@ namespace _0235
             }
         }
     }
+
     class Program
     {
         static void Main(string[] args)

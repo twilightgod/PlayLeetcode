@@ -10,13 +10,7 @@ namespace _0171
             var acc = 1;
             for (var i = s.Length - 1; i >= 0 ; --i)
             {
-                var c = s[i];
-                var num = (int)(c - 'A') + 1;
-
-                if (c == 'Z')
-                {
-                    num = 26;
-                }
+                var num = (int)(s[i] - 'A') + 1;
 
                 ans += (acc * num);
                 acc *= 26;
