@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace _0295
 {
+    // Handmade PQ
     public class PriorityQueue<T>
     {
         private IComparer<T> comp = Comparer<T>.Default;
@@ -25,9 +26,7 @@ namespace _0295
             var i = data.Count - 1;
             while (i > 0 && comp.Compare(data[i], data[GetParent(i)]) < 0)
             {
-                var t = data[i];
-                data[i] = data[GetParent(i)];
-                data[GetParent(i)] = t;
+                (data[i], data[GetParent(i)]) = (data[GetParent(i)], data[i]);
                 i = GetParent(i);
             }
         }

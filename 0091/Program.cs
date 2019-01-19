@@ -4,51 +4,40 @@ using System.Linq;
 
 namespace _0091
 {
-    public class Solution {
-    public int NumDecodings(string s) {
-        /*
-        if (String.IsNullOrEmpty(s))
+    public class Solution
+    {
+        public int NumDecodings(string s)
         {
-            return 0;
-        }
-        */
-        var f = Enumerable.Repeat(0, s.Length).ToList();
-
-        if (s[0] == '0')
-        {
-            return 0;
-        }
-        else
-        {
-            f[0] = 1;
-        }
-
-        for (var i = 1; i < s.Length; ++i)
-        {
-            if (s[i] != '0')
+            if (String.IsNullOrEmpty(s))
             {
-                // decode ith char
-                f[i] = f[i - 1];
+                return 0;
             }
-            // decode (i-1 ~ i)th chars
-            var digits = s.Substring(i - 1, 2);
-            var number = Convert.ToInt32(digits);
-            if (number >= 10 && number <= 26)
+
+            // padding
+            s = "0" + s;
+            var f = new int[s.Length];
+
+            f[0] = 1;
+
+            for (var i = 1; i < s.Length; ++i)
             {
-                if (i - 1 == 0)
+                if (s[i] != '0')
                 {
-                    f[i] += 1;
+                    // decode ith char
+                    f[i] = f[i - 1];
                 }
-                else
+                // decode (i-1 ~ i)th chars
+                var digits = s.Substring(i - 1, 2);
+                var number = Convert.ToInt32(digits);
+                if (number >= 10 && number <= 26)
                 {
                     f[i] += f[i - 2];
                 }
             }
-        }
 
-        return f[s.Length - 1];
+            return f[s.Length - 1];
+        }
     }
-}
 
     class Program
     {
