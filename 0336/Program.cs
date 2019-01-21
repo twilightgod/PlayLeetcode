@@ -36,6 +36,7 @@ namespace _0336
                 }
             }
 
+            // dedupe
             var answers = new List<IList<int>>();
             foreach (var pair in answersSet)
             {
@@ -55,7 +56,7 @@ namespace _0336
             var r = s.Length - 1;
             while (l < r)
             {
-                if (s[++l] != s[--r])
+                if (s[l++] != s[r--])
                 {
                     return false;
                 }
