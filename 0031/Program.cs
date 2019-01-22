@@ -40,9 +40,7 @@ namespace _0031
 
         private void Swap(ref int a, ref int b)
         {
-            var c = a;
-            a = b;
-            b = c;
+            (a, b) = (b, a);
         }
     }
 

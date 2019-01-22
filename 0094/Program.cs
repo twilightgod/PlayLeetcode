@@ -25,11 +25,7 @@ namespace _0094
             {
                 var node = nodeStack.Pop();
                 inorderList.Add(node.val);
-
-                if (node.right != null)
-                {
-                    PushLeftNodes(node.right, nodeStack);
-                }
+                PushLeftNodes(node.right, nodeStack);
             }
 
             return inorderList;

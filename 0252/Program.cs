@@ -21,24 +21,15 @@ namespace _0252
             }
 
             Array.Sort(intervals, (x, y) => {
-                if (x.start == y.start)
-                {
-                    return x.end - y.end;
-                }
-                else
-                {
-                    return x.start - y.start;
-                }
+                    return x.start.CompareTo(y.start);
                 });
 
-            var lastMeeting = intervals[0];
             for (var i = 1; i < intervals.Length; ++i)
             {
-                if (intervals[i].start < lastMeeting.end)
+                if (intervals[i].start < intervals[i - 1].end)
                 {
                     return false;
                 }
-                lastMeeting = intervals[i];
             }
 
             return true;
