@@ -11,12 +11,9 @@ namespace _0518
 
             foreach (var coin in coins)
             {
-                for (var i = 1; i <= amount; ++i)
+                for (var i = coin; i <= amount; ++i)
                 {
-                    if (i - coin >= 0)
-                    {
-                        ways[i] += ways[i - coin];
-                    }
+                    ways[i] += ways[i - coin];
                 }
             }
 

@@ -17,23 +17,23 @@ namespace _0543
     {
         public int DiameterOfBinaryTree(TreeNode root)
         {
-            return GetMaxDepth(root).Diameter;
+            return DFS(root).maxDiameter;
         }
 
-        private (int MaxDepth, int Diameter) GetMaxDepth(TreeNode root)
+        private (int depth, int maxDiameter) DFS(TreeNode root)
         {
             if (root == null)
             {
                 return (0, 0);
             }
 
-            var leftResult = GetMaxDepth(root.left);
-            var rightResult = GetMaxDepth(root.right);
+            var leftResult = DFS(root.left);
+            var rightResult = DFS(root.right);
 
-            var maxDepth = Math.Max(leftResult.MaxDepth, rightResult.MaxDepth) + 1;
-            var diameter = Math.Max(Math.Max(leftResult.Diameter, rightResult.Diameter), leftResult.MaxDepth + rightResult.MaxDepth);
+            var depth = Math.Max(leftResult.depth, rightResult.depth) + 1;
+            var maxDiameter = Math.Max(Math.Max(leftResult.maxDiameter, rightResult.maxDiameter), leftResult.depth + rightResult.depth);
 
-            return (maxDepth, diameter);
+            return (depth, maxDiameter);
         }
     }
 

@@ -13,7 +13,7 @@ namespace _0683
                 return -1;
             }
 
-            // conver to slot view
+            // convert to slot view
             var slot = new int[flowers.Length];
             for (var i = 1; i < flowers.Length; ++i)
             {
@@ -53,7 +53,7 @@ namespace _0683
                 return -1;
             }
 
-            // conver to slot view
+            // convert to slot view
             var slot = new int[flowers.Length];
             for (var i = 1; i < flowers.Length; ++i)
             {
