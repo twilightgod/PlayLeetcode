@@ -12,27 +12,16 @@ namespace _0560
             sumDic[0] = 1;
 
             var sum = 0;
-            var ans = 0;
+            var answer = 0;
             foreach (var num in nums)
             {
                 sum += num;
-                // look for sum - p = k, p is previous sum
-                var p = sum - k;
-                if (sumDic.ContainsKey(p))
-                {
-                    ans += sumDic[p];
-                }
-                if (sumDic.ContainsKey(sum))
-                {
-                    sumDic[sum]++;
-                }
-                else
-                {
-                    sumDic.Add(sum, 1);
-                }
+                // look for previous sum p, which meets sum - p = k, so p = sum - k 
+                answer += sumDic.GetValueOrDefault(sum - k, 0);
+                sumDic[sum] = sumDic.GetValueOrDefault(sum, 0) + 1;
             }
 
-            return ans;
+            return answer;
         }
     }
 

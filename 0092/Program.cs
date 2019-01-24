@@ -40,7 +40,8 @@ namespace _0092
                 p2 = p3;
             }
 
-            p_pre_m.next.next = p3;
+            // link the last one
+            p_pre_m.next.next = p2;
             p_pre_m.next = p1;
 
             return vHead.next;

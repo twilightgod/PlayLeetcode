@@ -6,16 +6,7 @@ namespace _0365
     {
         public bool CanMeasureWater(int x, int y, int z)
         {
-            if (x == 0)
-            {
-                return z == 0 || y == z;
-            }
-            if (y == 0)
-            {
-                return z == 0 || x == z;
-            }
-            var g = GCD(x, y);
-            return z >= 0 && z <= x + y && z % g == 0;
+            return z == 0 || z <= x + y && z % GCD(x, y) == 0;
         }
 
         private int GCD(int x, int y)
