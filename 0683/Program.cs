@@ -25,15 +25,16 @@ namespace _0683
             var r = l + k + 1;
             for (var i = l + 1; r < flowers.Length; ++i)
             {
-                // <= is for i == r case
-                if (slot[i] < slot[l] || slot[i] <= slot[r])
+                // i meets r means we find out an answer                
+                if (i == r)
                 {
-                    if (i == r)
-                    {
-                        var candidate = Math.Max(slot[l], slot[i]);
-                        ans = ans == -1 ? candidate : Math.Min(candidate, ans);                    
-                    }
-                    
+                    var candidate = Math.Max(slot[l], slot[r]);
+                    ans = ans == -1 ? candidate : Math.Min(candidate, ans);                    
+                }
+
+                // if i violates conditions or i meets r, move l and r
+                if (slot[i] < slot[l] || slot[i] < slot[r] || i == r)
+                {
                     // if we found i between (l, r) range that slot[i] is smaller than both slot[l] and slot[r]
                     // that means [l, r] is not an answer candidate
                     // we can move l to i directly, since all slots in (l, i - 1) range are larger than slot[i]
@@ -41,58 +42,6 @@ namespace _0683
                     l = i; // i will be l + 1 in next iteration
                     r = l + k + 1;
                 }
-            }
-
-            return ans;
-        }
-
-        public int KEmptySlots_Heap(int[] flowers, int k)
-        {
-            if (k + 2 > flowers.Length)
-            {
-                return -1;
-            }
-
-            // convert to slot view
-            var slot = new int[flowers.Length];
-            for (var i = 1; i < flowers.Length; ++i)
-            {
-                slot[flowers[i] - 1] = i + 1;
-            }
-
-            var ans = -1;
-            var minHeap = new SortedSet<int>();
-
-            for (var i = 0; i <= flowers.Length - k - 2; ++i)
-            {
-                // insert bloom time into heap
-                if (i == 0)
-                {
-                    for (var j = 0; j < k + 1; ++j)
-                    {
-                        minHeap.Add(slot[j]);
-                    }
-                }
-                minHeap.Add(slot[i + k + 1]);
-
-                // find top 2 smallest
-                var min1 = minHeap.Min;
-                minHeap.Remove(min1);
-
-                var min2 = minHeap.Min;
-
-                // add min1 back to heap
-                minHeap.Add(min1);
-
-                var dayMin = Math.Min(slot[i], slot[i + k + 1]);
-                var dayMax = Math.Max(slot[i], slot[i + k + 1]);
-
-                if (dayMin == min1 && dayMax == min2)
-                {
-                    // if top 2 smallest is ith and (i + k + 1)th slots, that means all flowers between them will bloom later
-                    ans = ans == -1 ? dayMax : Math.Min(ans, dayMax);
-                }
-                minHeap.Remove(slot[i]);
             }
 
             return ans;
