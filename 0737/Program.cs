@@ -5,46 +5,51 @@ namespace _0737
 {
     public class UnionFind
     {
-        Dictionary<string, string> data = new Dictionary<string, string>();
-        bool randomChoice = false;
+        Dictionary<string, string> parent = new Dictionary<string, string>();
+        Dictionary<string, int> rank = new Dictionary<string, int>();
 
-        public void TryCreateEntry(string entry)
+        public string Find(string x)
         {
-            if (!data.ContainsKey(entry))
+            if (!Contains(x))
             {
-                data.Add(entry, entry);
+                parent[x] = x;
+                rank[x] = 0;
+            }
+
+            if (parent[x] != x)
+            {
+                parent[x] = Find(parent[x]);
+            }
+
+            return parent[x];
+        }
+
+        public void Union(string x, string y)
+        {
+            x = Find(x);
+            y = Find(y);
+
+            if (x != y)
+            {
+                if (rank[x] > rank[y])
+                {
+                    parent[y] = x;
+                }
+                else if (rank[x] < rank[y])
+                {
+                    parent[x] = y;
+                }
+                else
+                {
+                    parent[x] = y;
+                    rank[y]++;
+                }
             }
         }
 
-        public string Find(string entry)
+        public bool Contains(string x)
         {
-            var root = entry;
-            while (data[root] != root)
-            {
-                //data[root] = data[data[root]];
-                root = data[root];
-            }
-            return root;
-        }
-
-        public void Union(string entry1, string entry2)
-        {
-            var root1 = Find(entry1);
-            var root2 = Find(entry2);
-
-            if ((randomChoice = !randomChoice) == false)
-            {
-                data[root1] = root2;
-            }
-            else
-            {
-                data[root2] = root1;
-            }
-        }
-
-        public bool ContainsEntry(string entry)
-        {
-            return data.ContainsKey(entry);
+            return parent.ContainsKey(x);
         }
     }
 
@@ -60,8 +65,6 @@ namespace _0737
             var uf = new UnionFind();
             for (var i = 0; i < pairs.GetLength(0); ++i)
             {
-                uf.TryCreateEntry(pairs[i, 0]);
-                uf.TryCreateEntry(pairs[i, 1]);
                 uf.Union(pairs[i, 0], pairs[i, 1]);
             }
 
