@@ -74,7 +74,7 @@ namespace _0737
                 {
                     
                 }
-                else if (uf.ContainsEntry(words1[i]) && uf.ContainsEntry(words2[i]))
+                else if (uf.Contains(words1[i]) && uf.Contains(words2[i]))
                 {
                     if (uf.Find(words1[i]) != uf.Find(words2[i]))
                     {

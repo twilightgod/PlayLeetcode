@@ -20,38 +20,20 @@ namespace _0395
             // the trick is to try all 26 possible distinct char set size, so when we have too many distinct chars, then move left pointer
             for (var distinctCharCount = 1; distinctCharCount <= 26; ++distinctCharCount)
             {
-                var countDic = new Dictionary<char, int>();
+                var charDict = new Dictionary<char, int>();
                 var l = 0;
-                var r = -1;
-
-                while (true)
+                for (var r = 0; r < s.Length; ++r)
                 {
-                    if (countDic.Count > distinctCharCount)
+                    charDict[s[r]] = charDict.GetValueOrDefault(s[r], 0) + 1;                    
+                    while (charDict.Count > distinctCharCount)
                     {
-                        countDic[s[l]]--;
-                        if (countDic[s[l]] == 0)
+                        if (--charDict[s[l]] == 0)
                         {
-                            countDic.Remove(s[l]);
+                            charDict.Remove(s[l]);
                         }
                         l++;
                     }
-                    else
-                    {
-                        r++;
-                        if (r >= s.Length)
-                        {
-                            break;
-                        }
-                        if (!countDic.ContainsKey(s[r]))
-                        {
-                            countDic.Add(s[r], 1);
-                        }
-                        else
-                        {
-                            countDic[s[r]]++;
-                        }
-                    }
-                    if (countDic.Values.Min() >= k)
+                    if (charDict.Values.Min() >= k)
                     {
                         answer = Math.Max(answer, r - l + 1);
                     }

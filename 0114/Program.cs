@@ -16,10 +16,7 @@ namespace _0114
     {
         public void Flatten(TreeNode root)
         {
-            if (root != null)
-            {
-                FlatternTree(root);
-            }
+            FlatternTree(root);
         }
 
         // call for left subtree
@@ -28,6 +25,11 @@ namespace _0114
         // return last node        
         private TreeNode FlatternTree(TreeNode root)
         {
+            if (root == null)
+            {
+                return null;
+            }
+
             // leaf
             if (root.left == null && root.right == null)
             {

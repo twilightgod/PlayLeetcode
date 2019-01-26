@@ -20,17 +20,8 @@ namespace _0732
 
         private void InsertMeeting(int start, int end)
         {
-            if (!events.ContainsKey(start))
-            {
-                events.Add(start, 0);
-            }
-            events[start]++;
-
-            if (!events.ContainsKey(end))
-            {
-                events.Add(end, 0);
-            }
-            events[end]--;
+            events[start] = events.GetValueOrDefault(start, 0) + 1;
+            events[end] = events.GetValueOrDefault(end, 0) - 1;
         }
 
         private void RemoveMeeting(int start, int end)
@@ -59,6 +50,7 @@ namespace _0732
             return maxLevel;
         }
     }
+
     class Program
     {
         static void Main(string[] args)

@@ -3,35 +3,20 @@ using System.Collections.Generic;
 
 namespace _0146
 {
-    public class ListNode
-    {
-        public ListNode Previous;
-        public ListNode Next;
-        public int Key;
-        public int Value;
-    }
-
     public class LRUCache
     {
 
         int size = 0;
         int capacity = 0;
-        ListNode head = null;
-        ListNode tail = null;
-
-        Dictionary<int, ListNode> hash = null;
+        LinkedList<KeyValuePair<int, int>> list = null;
+        Dictionary<int, LinkedListNode<KeyValuePair<int, int>>> hash = null;
 
         public LRUCache(int capacity)
         {
             this.capacity = capacity;
             size = 0;
-            head = new ListNode();
-            tail = new ListNode();
-            head.Previous = null;
-            head.Next = tail;
-            tail.Previous = head;
-            tail.Next = null;
-            hash = new Dictionary<int, ListNode>();
+            list = new LinkedList<KeyValuePair<int, int>>();
+            hash = new Dictionary<int, LinkedListNode<KeyValuePair<int, int>>>();
         }
 
         public int Get(int key)
@@ -40,14 +25,10 @@ namespace _0146
             {
                 var node = hash[key];
                 // remove node
-                node.Previous.Next = node.Next;
-                node.Next.Previous = node.Previous;
+                list.Remove(node);
                 // insert node after head
-                head.Next.Previous = node;
-                node.Next = head.Next;
-                head.Next = node;
-                node.Previous = head;
-                return node.Value;
+                list.AddFirst(node);
+                return node.Value.Value;
             }
             else
             {
@@ -57,39 +38,28 @@ namespace _0146
 
         public void Put(int key, int value)
         {
+            var kvp = new KeyValuePair<int, int>(key, value);
             if (hash.ContainsKey(key))
             {
                 // update value
                 var node = hash[key];
-                node.Value = value;
+                node.Value = kvp;
                 // remove node
-                node.Previous.Next = node.Next;
-                node.Next.Previous = node.Previous;
+                list.Remove(node);
                 // insert node after head
-                head.Next.Previous = node;
-                node.Next = head.Next;
-                head.Next = node;
-                node.Previous = head;
+                list.AddFirst(node);
             }
             else
             {
-                size++;
-                var node = new ListNode();
-                node.Key = key;
-                node.Value = value;
-                // insert node after head
-                head.Next.Previous = node;
-                node.Next = head.Next;
-                head.Next = node;
-                node.Previous = head;
+                var node = new LinkedListNode<KeyValuePair<int, int>>(kvp);
                 hash[key] = node;
+                list.AddFirst(node);
                 //remove last
-                if (size > capacity)
+                if (++size > capacity)
                 {
-                    node = tail.Previous;
-                    node.Previous.Next = tail;
-                    tail.Previous = node.Previous;
-                    hash.Remove(node.Key);
+                    hash.Remove(list.Last.Value.Key);
+                    list.RemoveLast();
+                    size--;
                 }
             }
         }
