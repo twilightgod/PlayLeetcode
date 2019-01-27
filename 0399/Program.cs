@@ -4,74 +4,96 @@ using System.Collections.Generic;
 
 namespace _0399
 {
-    public class UnionFindData
-    {
-        public string Root{get;set;}
-        public int Size{get;set;}
-        public double Value{get;set;}
-    }
-
     public class UnionFind
     {
-        private Dictionary<string, UnionFindData> data = new Dictionary<string, UnionFindData>();
+        Dictionary<string, string> parent = null;
+        Dictionary<string, int> rank = null;
+        
+        // value from current node to its parent
+        Dictionary<string, double> value = null;
 
-        public void TryCreateEntry(string entry)
+        public UnionFind()
         {
-            if (!data.ContainsKey(entry))
+            parent = new Dictionary<string, string>();
+            rank = new Dictionary<string, int>();
+            value = new Dictionary<string, double>();
+        }
+
+        public bool Contains(string x)
+        {
+            return parent.ContainsKey(x);
+        }
+
+        public string Find(string x)
+        {
+            if (!Contains(x))
             {
-                data.Add(entry, new UnionFindData
-                {
-                    Root = entry,
-                    Size = 1,
-                    Value = 1d
-                });
+                parent[x] = x;
+                rank[x] = 0;
+                value[x] = 1d;
+            }
+
+            // compression
+            if (parent[x] != x)
+            {
+                var prepx = parent[x];
+                parent[x] = Find(parent[x]);
+                value[x] *= value[prepx];
+            }
+
+            return parent[x];
+        }
+
+        
+        public void Union(string x, string y, double val)
+        {
+            var px = Find(x);
+            var py = Find(y);
+
+            if (px == py)
+            {
+                throw new Exception("duplicate relationship");
+            }
+
+            val = val * value[y] / value[x];
+
+            // merge by rank
+            if (rank[px] < rank[py])
+            {
+                parent[px] = py;
+                value[px] = val;
+            }
+            else if (rank[px] > rank[py])
+            {
+                parent[py] = px;
+                value[py] = 1 / val;
+            }
+            else
+            {
+                parent[px] = py;
+                value[px] = val;
+                rank[py]++;
             }
         }
 
-        public bool ContainsEntry(string entry)
+        public double GetValue(string x, string y)
         {
-            return data.ContainsKey(entry);
-        }
-
-        public (string Root, double TotalValue) Find(string entry)
-        {
-            var current = entry;
-            var totalValue = 1d;
-
-            while (data[current].Root != current)
+            // don't exist
+            if (!Contains(x) || !Contains(y))
             {
-                // path compression
-                data[current].Value *= data[data[current].Root].Value;
-                data[current].Root = data[data[current].Root].Root;
-                current = data[current].Root;
-                totalValue *= data[current].Value;
+                return -1d;
             }
 
-            return (current, totalValue);
-        }
-
-        public void Union(string entry1, string entry2, double value_1_to_2)
-        {
-            var findResult1 = Find(entry1);
-            var findResult2 = Find(entry2);
-
-            if (findResult1.Root != findResult2.Root)
+            var px = Find(x);
+            var py = Find(y);
+            
+            // not in same set
+            if (px != py)
             {
-                if (data[findResult1.Root].Size > data[findResult2.Root].Size)
-                {
-                    // merge 2 to 1
-                    data[findResult1.Root].Size = data[findResult1.Root].Size + data[findResult2.Root].Size;
-                    data[findResult2.Root].Root = findResult1.Root;
-                    data[findResult2.Root].Value = findResult1.TotalValue / findResult2.TotalValue / value_1_to_2;
-                }
-                else
-                {
-                    // merge 1 to 2
-                    data[findResult2.Root].Size = data[findResult1.Root].Size + data[findResult2.Root].Size;
-                    data[findResult1.Root].Root = findResult2.Root;
-                    data[findResult1.Root].Value = findResult2.TotalValue * value_1_to_2 / findResult1.TotalValue;
-                }
+                return -1d;
             }
+
+            return value[x] / value[y];
         }
     }
 
@@ -83,40 +105,14 @@ namespace _0399
 
             for (var i = 0; i < equations.GetLength(0); ++i)
             {
-                var entry1 = equations[i, 0];
-                var entry2 = equations[i, 1];
-                var value_1_to_2 = values[i];
-
-                uf.TryCreateEntry(entry1);
-                uf.TryCreateEntry(entry2);
-
-                uf.Union(entry1, entry2, value_1_to_2);
+                uf.Union(equations[i, 0], equations[i, 1], values[i]);
             }
 
             var answers = new List<double>();
 
             for (var i = 0; i < queries.GetLength(0); ++i)
             {
-                var entry1 = queries[i, 0];
-                var entry2 = queries[i, 1];
-
-                var answer = -1d;
-                if (!uf.ContainsEntry(entry1) || !uf.ContainsEntry(entry2))
-                {
-                    
-                }
-                else
-                {
-                    var findResult1 = uf.Find(entry1);
-                    var findResult2 = uf.Find(entry2);
-
-                    if (findResult1.Root == findResult2.Root)
-                    {
-                        answer = findResult1.TotalValue / findResult2.TotalValue;
-                    }
-                }
-
-                answers.Add(answer);
+                answers.Add(uf.GetValue(queries[i, 0], queries[i, 1]));
             }
 
             return answers.ToArray();
@@ -127,6 +123,7 @@ namespace _0399
     {
         static void Main(string[] args)
         {
+            new Solution().CalcEquation(new string[,]{{"a", "b"}, {"b", "c"}}, new double[]{2, 3}, new string[,]{{"a","c"}});
             Console.WriteLine("Hello World!");
         }
     }

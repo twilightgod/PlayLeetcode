@@ -7,94 +7,71 @@ namespace _0030
     {
         List<int> answers = new List<int>();
         Dictionary<string, int> dict = new Dictionary<string, int>();
-        Dictionary<string, int> appearing = new Dictionary<string, int>();
 
         public IList<int> FindSubstring(string s, string[] words)
         {
-            var len = -1;
-           
             if (words == null || words.Length == 0)
             {
                 return answers;
             }
 
+            var len = words[0].Length;
+
             foreach (var word in words)
             {
-                if (len == -1)
+                if (word.Length != len)
                 {
-                    len = word.Length;
+                    return answers;
                 }
-                else if (word.Length != len)
-                {
-                    return answers;        
-                }
-                if (dict.ContainsKey(word))
-                {
-                    dict[word]++;
-                }
-                else
-                {
-                    dict.Add(word, 1);
-                }
-                appearing[word] = 0;
+                dict[word] = dict.GetValueOrDefault(word, 0) + 1;
             }
 
             // loop starting position
             for (var i = 0; i < len; ++i)
             {
-                var l = -1;
-                ResetAppearing();
+                var l = i;
+                var zeros = dict.Count;
+                var dictCopied = new Dictionary<string, int>(dict);
                 for (var r = i; r + len - 1 < s.Length; r += len)
                 {
                     var word = s.Substring(r, len);
-                    if (dict.ContainsKey(word))
+                    if (dictCopied.ContainsKey(word))
                     {
-                        if (l == -1)
+                        if (--dictCopied[word] == 0)
                         {
-                            l = r;
+                            zeros--;
                         }
-                        appearing[word]++;
-                        while (appearing[word] > dict[word])
+                        else if (dictCopied[word] == -1)
                         {
-                            appearing[s.Substring(l, len)]--;  
+                            zeros++;
+                        }
+                        while (dictCopied[word] < 0)
+                        {
+                            if (++dictCopied[s.Substring(l, len)] == 0)
+                            {
+                                zeros--;
+                            }
+                            else
+                            {
+                                zeros++;
+                            }
                             l += len;
                         }
-                        if (IsAppearingMatchingDict())
+                        if (zeros == 0)
                         {
                             answers.Add(l);
-                            appearing[s.Substring(l, len)]--;  
-                            l += len;
                         }
                     }
                     else
                     {
-                        l = -1;
-                        ResetAppearing();
+                        zeros = dict.Count;
+                        dictCopied = new Dictionary<string, int>(dict);
+                        l = r + len;
                     }
                 }
             }
 
             return answers;
-        }
-
-        private void ResetAppearing()
-        {
-            foreach (var word in dict.Keys)
-            {
-                appearing[word] = 0;
-            }
-        }
-
-        private bool IsAppearingMatchingDict()
-        {
-            foreach (var word in appearing.Keys)
-            {
-                if (appearing[word] != dict[word])
-                {
-                    return false;
-                }
-            }
-            return true;
         }
     }
 
@@ -102,7 +79,7 @@ namespace _0030
     {
         static void Main(string[] args)
         {
-            new Solution().FindSubstring("aaa", new string[]{"aa", "aa"});
+            new Solution().FindSubstring("barfoothebarfooman", new string[] { "foo", "bar", "the" });
             Console.WriteLine("Hello World!");
         }
     }
