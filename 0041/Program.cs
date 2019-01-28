@@ -15,9 +15,7 @@ namespace _0041
                     // if it's part of perfect array and not in it's position
                     // save pos to j to avoid nums[i] - 1 change during swap
                     var j = nums[i] - 1;
-                    var t = nums[j];
-                    nums[j] = nums[i];
-                    nums[i] = t;
+                    (nums[i], nums[j]) = (nums[j], nums[i]);
                 }
             }
 

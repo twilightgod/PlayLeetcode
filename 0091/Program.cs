@@ -13,29 +13,43 @@ namespace _0091
                 return 0;
             }
 
-            // padding
-            s = "0" + s;
-            var f = new int[s.Length];
+            // rolling dp
+            var f = new int[3];
+            f[1] = 1;
 
-            f[0] = 1;
-
-            for (var i = 1; i < s.Length; ++i)
+            for (var i = 0; i < s.Length; ++i)
             {
-                if (s[i] != '0')
-                {
-                    // decode ith char
-                    f[i] = f[i - 1];
-                }
-                // decode (i-1 ~ i)th chars
-                var digits = s.Substring(i - 1, 2);
-                var number = Convert.ToInt32(digits);
-                if (number >= 10 && number <= 26)
-                {
-                    f[i] += f[i - 2];
-                }
+                f[2] = DecodeWays(s[i]) * f[1] 
+                    + (i > 0 ? DecodeWays(s[i - 1], s[i]) * f[0] : 0);
+                f[0] = f[1];
+                f[1] = f[2];
             }
 
-            return f[s.Length - 1];
+            return f[1];
+        }
+
+        private int DecodeWays(char c1)
+        {
+            if (c1 == '0')
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+        private int DecodeWays(char c1, char c2)
+        {
+            if (c1 == '1' || c1 == '2' && c2 <= '6')
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 
@@ -43,6 +57,7 @@ namespace _0091
     {
         static void Main(string[] args)
         {
+            new Solution().NumDecodings("12");
             Console.WriteLine("Hello World!");
         }
     }
