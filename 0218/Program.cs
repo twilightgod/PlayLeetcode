@@ -4,60 +4,59 @@ using System.Linq;
 
 namespace _0218
 {
-    public class Solution 
+    public class Solution
     {
-        public IList<int[]> GetSkyline(int[,] buildings) 
+        public IList<int[]> GetSkyline(int[,] buildings)
         {
-            var events = new List<(int x, int h)>();
+            var events = new List<(int x, int h, int idx)>();
             var n = buildings.GetLength(0);
+
+            // enter event comes first when we have some events with same x coodination
             for (var i = 0; i < n; ++i)
             {
-                events.Add((buildings[i, 0], -buildings[i, 2]));
-                events.Add((buildings[i, 1], buildings[i, 2]));
+                events.Add((buildings[i, 0], -buildings[i, 2], i));
+                events.Add((buildings[i, 1], buildings[i, 2], i));
             }
 
-            events.Sort((a, b) =>
-                a.x == b.x ?
-                    a.h.CompareTo(b.h) :
-                    a.x.CompareTo(b.x)
-            );
+            events.Sort();
 
             var answers = new List<int[]>();
-            
-            var bst = new SortedDictionary<int, int>
-            (Comparer<int>.Create(
-                (a, b) => 
-                -a.CompareTo(b)
-                )
-            );
-            bst[0] = 1;
+
+            // SorterSet doesn't support duplicate elements, use (height, index) to walk around
+            // h is -height to leverage default comparer 
+            var bst = new SortedSet<(int h, int idx)>();
+
+            // ground
+            bst.Add((0, -1));
 
             for (var i = 0; i < (n << 1); ++i)
             {
-                var isEnterEvnet = events[i].h < 0;
-                var h = Math.Abs(events[i].h);
+                var (x, h, idx) = events[i];
+                var isEnterEvnet = h < 0;
+                h = Math.Abs(h);
 
+                // if it's entering a new building
                 if (isEnterEvnet)
                 {
-                    if (!bst.ContainsKey(h))
+                    // if new height is higher than current highest, generate one answer
+                    if (h > -bst.First().h)
                     {
-                        if (h > bst.Keys.First())
-                        {
-                            answers.Add(new int[]{events[i].x, h});
-                        }
-                        bst[h] = 0;
+                        answers.Add(new int[] { x, h });
                     }
-                    bst[h]++;
+
+                    // add 
+                    bst.Add((-h, idx));
                 }
+                // leaving a building
                 else
                 {
-                    if (--bst[h] == 0)
+                    // remove first
+                    bst.Remove((-h, idx));
+
+                    // if the removed one is higher than current highest, generate one answer
+                    if (h > -bst.First().h)
                     {
-                        bst.Remove(h);
-                        if (h > bst.Keys.First())
-                        {
-                            answers.Add(new int[]{events[i].x, bst.Keys.First()});
-                        }
+                        answers.Add(new int[] { x, -bst.First().h });
                     }
                 }
             }
