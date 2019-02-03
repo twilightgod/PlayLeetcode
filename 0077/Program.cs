@@ -5,26 +5,34 @@ namespace _0077
 {
     public class Solution
     {
-        public int NumJewelsInStones(string J, string S)
+        public IList<IList<int>> Combine(int n, int k)
         {
-            if (String.IsNullOrEmpty(J) || String.IsNullOrEmpty(S))
+            var answers = new List<IList<int>>();
+            var answer = new List<int>();
+            var used = new HashSet<int>();
+            DFS(0, n, k, used, answer, answers);
+            return answers;
+        }
+
+        private void DFS(int depth, int n, int k, HashSet<int> used, List<int> answer, List<IList<int>> answers)
+        {
+            if (depth == k)
             {
-                return 0;
+                answers.Add(new List<int>(answer));
+                return;
             }
-            var jew = new HashSet<char>();
-            foreach (var c in J)
+            
+            for (var i = answer.Count == 0 ? 1 : answer[answer.Count - 1]; i <= n; ++i)
             {
-                jew.Add(c);
-            }
-            var answer = 0;
-            foreach (var c in S)
-            {
-                if (jew.Contains(c))
+                if (!used.Contains(i))
                 {
-                    answer++;
+                    used.Add(i);
+                    answer.Add(i);
+                    DFS(depth + 1, n, k, used, answer, answers);
+                    answer.RemoveAt(answer.Count - 1);
+                    used.Remove(i);
                 }
             }
-            return answer;
         }
     }
 
