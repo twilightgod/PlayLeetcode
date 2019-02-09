@@ -20,10 +20,7 @@ namespace _0311
                 {
                     if (A[i, j] != 0)
                     {
-                        if (!sparseA.ContainsKey(i))
-                        {
-                            sparseA.Add(i, new Dictionary<int, int>());
-                        }
+                        sparseA.TryAdd(i, new Dictionary<int, int>());
                         sparseA[i][j] = A[i, j];
                     }
                 }
@@ -35,10 +32,7 @@ namespace _0311
                 {
                     if (B[i, j] != 0)
                     {
-                        if (!sparseB.ContainsKey(j))
-                        {
-                            sparseB.Add(j, new Dictionary<int, int>());
-                        }
+                        sparseB.TryAdd(j, new Dictionary<int, int>());
                         sparseB[j][i] = B[i, j];
                     }
                 }
@@ -50,10 +44,7 @@ namespace _0311
             {
                 foreach (var kvpB in sparseB)
                 {
-                    if (!sparseC.ContainsKey(kvpA.Key))
-                    {
-                        sparseC[kvpA.Key] = new Dictionary<int, int>();
-                    }
+                    sparseC.TryAdd(kvpA.Key, new Dictionary<int, int>());
                     var sum = 0;
                     foreach (var innerKvpA in kvpA.Value)
                     {

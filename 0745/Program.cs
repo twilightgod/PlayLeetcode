@@ -22,10 +22,7 @@ namespace _0745
                 node.WeightList.Add(i);
                 foreach (var c in words[i])
                 {
-                    if (!node.Children.ContainsKey(c))
-                    {
-                        node.Children.Add(c, new TrieNode());
-                    }
+                    node.Children.TryAdd(c, new TrieNode());
                     node = node.Children[c];
                     node.WeightList.Add(i);
                 }
@@ -34,10 +31,7 @@ namespace _0745
                 for (var j = words[i].Length - 1; j >= 0; --j)
                 {
                     var c = words[i][j];
-                    if (!node.Children.ContainsKey(c))
-                    {
-                        node.Children.Add(c, new TrieNode());
-                    }
+                    node.Children.TryAdd(c, new TrieNode());
                     node = node.Children[c];
                     node.WeightList.Add(i);
                 }
@@ -46,8 +40,6 @@ namespace _0745
 
         public int F(string prefix, string suffix)
         {
-            List<int> prefixWordList = null;
-            List<int> suffixWordList = null;
             var node = prefixTree;
             foreach (var c in prefix)
             {
@@ -57,7 +49,7 @@ namespace _0745
                 }
                 node = node.Children[c];
             }
-            prefixWordList = node.WeightList;
+            var prefixWeightList = node.WeightList;
 
             node = suffixTree;
             for (var i = suffix.Length - 1; i >= 0; --i)
@@ -69,28 +61,22 @@ namespace _0745
                 }
                 node = node.Children[c];
             }
-            suffixWordList = node.WeightList;
-
-            if (suffixWordList.Count == 0 || prefixWordList.Count == 0)
+            var suffixWeightList = node.WeightList;
+            
+            // weights are already sorted in asc
+            for (int i1 = prefixWeightList.Count - 1, i2 = suffixWeightList.Count - 1; i1 >=0 && i2 >= 0;)
             {
-                return -1;
-            }
-
-            var p1 = prefixWordList.Count - 1;
-            var p2 = suffixWordList.Count - 1;
-            while (p1 >= 0 && p2 >= 0)
-            {
-                if (prefixWordList[p1] == suffixWordList[p2])
+                if (prefixWeightList[i1] == suffixWeightList[i2])
                 {
-                    return prefixWordList[p1];
+                    return prefixWeightList[i1];
                 }
-                else if (prefixWordList[p1] > suffixWordList[p2])
+                else if (prefixWeightList[i1] > suffixWeightList[i2])
                 {
-                    p1--;
+                    i1--;
                 }
                 else
                 {
-                    p2--;
+                    i2--;
                 }
             }
 

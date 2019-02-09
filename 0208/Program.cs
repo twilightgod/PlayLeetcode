@@ -7,17 +7,17 @@ namespace _0208
     {
 
         /** Initialize your data structure here. */
-        class Node
+        class TrieNode
         {
-            public Dictionary<char, Node> Children {set;get;} = new Dictionary<char, Node>();
-            public bool IsWord {set;get;} = false;
+            public Dictionary<char, TrieNode> Children { set; get; } = new Dictionary<char, TrieNode>();
+            public bool IsWord { set; get; } = false;
         }
 
-        private Node root = null;
+        private TrieNode root = null;
 
         public Trie()
         {
-            root = new Node();    
+            root = new TrieNode();
         }
 
         /** Inserts a word into the trie. */
@@ -27,10 +27,7 @@ namespace _0208
 
             foreach (var c in word)
             {
-                if (!current.Children.ContainsKey(c))
-                {
-                    current.Children.Add(c, new Node());
-                }
+                current.Children.TryAdd(c, new TrieNode());
                 current = current.Children[c];
             }
 
@@ -50,7 +47,7 @@ namespace _0208
                 }
                 current = current.Children[c];
             }
-            
+
             return current.IsWord;
         }
 

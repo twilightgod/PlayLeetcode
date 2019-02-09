@@ -30,7 +30,7 @@ namespace _0010
                 {
                     if (p[j] == '*')
                     {
-                        // case 1, s[i] matches p[j - 1], s[i] is generated from p[j - 1] *, so look at i - 1, j
+                        // case 1, use p[j - 1] once or more times, s[i] matches p[j - 1], s[i] is generated from p[j - 1], so look at f[i - 1, j]
                         if (s[i] == p[j - 1] || p[j - 1] == '.')
                         {
                             f[i, j] = f[i - 1, j];                                

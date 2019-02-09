@@ -17,10 +17,13 @@ namespace _0023
     {
         public ListNode MergeKLists(ListNode[] lists)
         {
-            var pq = new SortedDictionary<int, Queue<ListNode>>();
+            // item2 is to break tie
+            var pq = new SortedSet<(ListNode, int)>(Comparer<(ListNode, int)>.Create((x, y) => x.Item1.val == y.Item1.val ? x.Item2.CompareTo(y.Item2) : x.Item1.val.CompareTo(y.Item1.val)));
             var n = lists.Length;
             var head = new ListNode(0);
             var current = head;
+
+            var ts = 0;
 
             // Init
             for (var i = 0; i < n; ++i)
@@ -28,12 +31,7 @@ namespace _0023
                 if (lists[i] != null)
                 {
                     var val = lists[i].val;
-                    if (!pq.ContainsKey(val))
-                    {
-                        pq[val] = new Queue<ListNode>();    
-                    }
-                    
-                    pq[val].Enqueue(lists[i]);
+                    pq.Add((lists[i], ts++));
                 }
             }
 
@@ -41,25 +39,14 @@ namespace _0023
             while (pq.Count > 0)
             {
                 var top = pq.First();
-                // Dequeue
-                var topNode = top.Value.Dequeue();
-                if (top.Value.Count == 0)
-                {
-                    pq.Remove(top.Key);
-                }
+                pq.Remove(top);
                 
-                current.next = topNode;
+                current.next = top.Item1;
                 current = current.next;
                 
-                if (topNode.next != null)
+                if (current.next != null)
                 {
-                    var val = topNode.next.val;
-                    if (!pq.ContainsKey(val))
-                    {
-                        pq[val] = new Queue<ListNode>();    
-                    }
-                    
-                    pq[val].Enqueue(topNode.next);
+                    pq.Add((current.next, ts++));
                 }
             }
 

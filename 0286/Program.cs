@@ -17,18 +17,18 @@ namespace _0286
                 {
                     if (rooms[i, j] == 0)
                     {
-                        var q = new Queue<(int x, int y)>();
+                        var q = new Queue<(int, int)>();
                         q.Enqueue((i, j));
                         while (q.Count > 0)
                         {
-                            var node = q.Dequeue();
+                            var (x, y) = q.Dequeue();
                             for (var k = 0; k < 4; ++k)
                             {
-                                var nextx = node.x + moves[k, 0];
-                                var nexty = node.y + moves[k, 1];
-                                if (nextx >= 0 && nextx < m && nexty >= 0 && nexty < n && rooms[nextx, nexty] > rooms[node.x, node.y] + 1)
+                                var nextx = x + moves[k, 0];
+                                var nexty = y + moves[k, 1];
+                                if (nextx >= 0 && nextx < m && nexty >= 0 && nexty < n && rooms[nextx, nexty] > rooms[x, y] + 1)
                                 {
-                                    rooms[nextx, nexty] = rooms[node.x, node.y] + 1;
+                                    rooms[nextx, nexty] = rooms[x, y] + 1;
                                     q.Enqueue((nextx, nexty));
                                 }
                             }
