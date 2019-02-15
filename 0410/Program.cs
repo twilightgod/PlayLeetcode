@@ -2,6 +2,7 @@
 
 namespace _0410
 {
+    // dp
     public class Solution
     {
         int[] sum = null;

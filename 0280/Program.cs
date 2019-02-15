@@ -13,9 +13,7 @@ namespace _0280
             Array.Sort(nums);
             for (var i = 1; i + 1 < nums.Length; i += 2)
             {
-                var t = nums[i];
-                nums[i] = nums[i + 1];
-                nums[i + 1] = t;
+                (nums[i], nums[i + 1]) = (nums[i + 1], nums[i]);
             }
         }
     }
