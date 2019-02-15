@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace _0818
 {
-    public class Solution
+   public class Solution
     {
         public int Racecar(int target)
         {
@@ -14,9 +14,11 @@ namespace _0818
 
             visited.Add((0, true));
             // (0, -1) won't be better than (0, 1)
-            //visited.Add((0, false));
+            visited.Add((0, false));
             q.Enqueue((0, 1, 0));
 
+            var limit = target << 1;
+            
             while (q.Count > 0)
             {
                 var (pos, speed, step) = q.Dequeue();
@@ -29,7 +31,10 @@ namespace _0818
                 var next_pos = pos + speed;
                 var next_speed = speed << 1;
                 var next_step = step + 1;
-                if (next_pos <= (target << 1) && next_speed <= (target << 1))
+                // optimization here, we don't check visited for acc operation
+                // it seems impossible to visit same position with different speed (for speed > 1)
+                // it reduces running time from 800ms to 200ms
+                if (Math.Abs(next_speed) <= limit && Math.Abs(next_pos) <= limit)
                 {
                     q.Enqueue((next_pos, next_speed, next_step));
                 }
