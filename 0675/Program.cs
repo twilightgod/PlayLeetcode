@@ -46,10 +46,11 @@ namespace _0675
         {
             var moves = new int[,] {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
             var q = new Queue<(int x, int y, int d)>();
-            var visited = new HashSet<(int x, int y)>();
+            // 2d array is much faster than HashSet<(int, int)>, 2288ms -> 620ms
+            var visited = new bool[m, n];
             
             q.Enqueue((startx, starty, 0));
-            visited.Add((startx, starty));
+            visited[startx, starty] = true;
 
             while (q.Count > 0)
             {
@@ -63,9 +64,9 @@ namespace _0675
                 {
                     var nextx = x + moves[i, 0];
                     var nexty = y + moves[i, 1];
-                    if (nextx >= 0 && nextx < m && nexty >= 0 && nexty < n && forest[nextx][nexty] > 0 && !visited.Contains((nextx, nexty)))
+                    if (nextx >= 0 && nextx < m && nexty >= 0 && nexty < n && forest[nextx][nexty] > 0 && !visited[nextx, nexty])
                     {
-                        visited.Add((nextx, nexty));
+                        visited[nextx, nexty] = true;
                         q.Enqueue((nextx, nexty, d + 1));
                     }
                 }

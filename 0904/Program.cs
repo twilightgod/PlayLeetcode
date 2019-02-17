@@ -14,11 +14,7 @@ namespace _0904
 
             for (var r = 0; r < tree.Length; ++r)
             {
-                if (!fruitMap.ContainsKey(tree[r]))
-                {
-                    fruitMap[tree[r]] = 0;
-                }
-                fruitMap[tree[r]]++;
+                fruitMap[tree[r]] = fruitMap.GetValueOrDefault(tree[r], 0) + 1;
                 while (fruitMap.Count > limit)
                 {
                     if (--fruitMap[tree[l]] == 0)
