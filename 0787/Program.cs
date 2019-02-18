@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace _0787
 {
+    // BFS with Heap, looks like DP
     public class Solution
     {
         public int FindCheapestPrice(int n, int[][] flights, int src, int dst, int K)
