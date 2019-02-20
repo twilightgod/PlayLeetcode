@@ -24,7 +24,7 @@ namespace _0929
                 {
                     localPart = localPart.Substring(0, plusPos);
                 }
-                emailSet.Add(localPart + "@" + domainPart);
+                emailSet.Add(localPart + domainPart);
             }
             return emailSet.Count;
         }
