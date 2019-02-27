@@ -16,14 +16,7 @@ namespace _0621
             var counter = new Dictionary<char, int>();
             foreach (var c in tasks)
             {
-                if (counter.ContainsKey(c))
-                {
-                    counter[c]++;
-                }
-                else
-                {
-                    counter[c] = 1;
-                }
+                counter[c] = counter.GetValueOrDefault(c) + 1;
             }
 
             var maxFrequncy = counter.Values.Max();
