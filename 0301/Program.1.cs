@@ -52,7 +52,6 @@ namespace _0301_1
                 // only handle first one for continous ( or ) to avoid duplication
                 if (i == startIndex || answer[i] != answer[i - 1])
                 {
-                    // handle ) first, to ensure answer[0 ... i] is valid 
                     if (rCount > 0 && answer[i] == ')')
                     {
                         // removed ith char, so next startindex is still i
