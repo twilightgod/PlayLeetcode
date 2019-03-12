@@ -6,38 +6,40 @@ namespace _0161
     {
         public bool IsOneEditDistance(string s, string t)
         {
-            // padding for empty
-            s += '|';
-            t += '|';
-            return MatchWithDistance(s, t, 1);
-        }
-
-        private bool MatchWithDistance(string s, string t, int allowedDistance)
-        {
-            var i = 0;
-            for (i = 0; i < s.Length && i < t.Length; ++i)
+            if (s == null || t == null)
+            {
+                throw new Exception("input is null");
+            }
+            if (s == t)
+            {
+                return false;
+            }
+            var len1 = s.Length;
+            var len2 = t.Length;
+            if (len1 > len2)
+            {
+                return IsOneEditDistance(t, s);
+            }
+            if (len2 - len1 >= 2)
+            {
+                return false;
+            }
+            for (var i = 0; i < len1; ++i)
             {
                 if (s[i] != t[i])
                 {
-                    if (allowedDistance > 0)
+                    if (len1 == len2)
                     {
-                        return 
-                        // remove
-                        MatchWithDistance(s.Remove(0, i + 1), t.Substring(i), allowedDistance - 1)
-                        // change
-                        || MatchWithDistance(t[i] + s.Remove(0, i + 1), t.Substring(i), allowedDistance - 1)
-                        // add
-                        || MatchWithDistance(t[i] + s.Substring(i), t.Substring(i), allowedDistance - 1)
-                        ;
+                        return s.Substring(i + 1) == t.Substring(i + 1);
                     }
                     else
                     {
-                        return false;
+                        return s.Substring(i) == t.Substring(i + 1);
                     }
                 }
             }
-            
-            return allowedDistance == 0 && i == s.Length && i == t.Length;
+
+            return true;
         }
     }
 
