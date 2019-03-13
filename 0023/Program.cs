@@ -17,21 +17,18 @@ namespace _0023
     {
         public ListNode MergeKLists(ListNode[] lists)
         {
-            // item2 is to break tie
-            var pq = new SortedSet<(ListNode, int)>(Comparer<(ListNode, int)>.Create((x, y) => x.Item1.val == y.Item1.val ? x.Item2.CompareTo(y.Item2) : x.Item1.val.CompareTo(y.Item1.val)));
-            var n = lists.Length;
+            // O(n log k)
+            // (val, list idx)
+            var pq = new SortedSet<(int, int)>();
             var head = new ListNode(0);
             var current = head;
 
-            var ts = 0;
-
             // Init
-            for (var i = 0; i < n; ++i)
+            for (var i = 0; i < lists.Length; ++i)
             {
                 if (lists[i] != null)
                 {
-                    var val = lists[i].val;
-                    pq.Add((lists[i], ts++));
+                    pq.Add((lists[i].val, i));
                 }
             }
 
@@ -41,12 +38,14 @@ namespace _0023
                 var top = pq.First();
                 pq.Remove(top);
                 
-                current.next = top.Item1;
+                var idx = top.Item2;
+                current.next = lists[idx];
+                lists[idx] = lists[idx].next;
                 current = current.next;
                 
                 if (current.next != null)
                 {
-                    pq.Add((current.next, ts++));
+                    pq.Add((current.next.val, idx));
                 }
             }
 
