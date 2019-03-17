@@ -14,41 +14,65 @@ namespace _0843
     {
         public void FindSecretWord(string[] wordlist, Master master)
         {
-            var candidateWords = new List<string>(wordlist);
+            // precompute match chars between all pairs
+            var n = wordlist.Length;
+            var matchCount = new int[n, n];
+            for (var i = 0; i < n; ++i)
+            {
+                for (var j = 0; j < n; ++j)
+                {
+                    matchCount[i, j] = GetMatchCount(wordlist[i], wordlist[j]);
+                }
+            }
+
+            // add all words to candidate list at begining 
+            var candidateList = new List<int>();
+            for (var i = 0; i < n; ++i)
+            {
+                candidateList.Add(i);
+            }
+
             while (true)
             {
-                var candidateWord = String.Empty;
-                var candidateCount = Int32.MaxValue;
-                foreach (var word in candidateWords)
+                // get candidate based on min zero match count to avoid worst case
+                // think about choose one word with max zero match count 
+                // if it's not the answer, we reduce the candidateList size slowly
+                var candidate = -1;
+                var minZeroMatchCount = Int32.MaxValue;
+                foreach (var idx1 in candidateList)
                 {
                     var zeroMatchCount = 0;
-                    foreach (var word2 in candidateWords)
+                    foreach (var idx2 in candidateList)
                     {
-                        if (0 == GetMatchCount(word, word2))
+                        if (matchCount[idx1, idx2] == 0)
                         {
                             zeroMatchCount++;
                         }
                     }
-                    if (candidateCount > zeroMatchCount)
+                    if (minZeroMatchCount > zeroMatchCount)
                     {
-                        candidateCount = zeroMatchCount;
-                        candidateWord = word;
+                        minZeroMatchCount = zeroMatchCount;
+                        candidate = idx1;
                     }
                 }
-                var matchCount = master.guess(candidateWord);
-                if (matchCount == 6)
+
+                var result = master.guess(wordlist[candidate]);
+                // found answer
+                if (result == 6)
                 {
                     break;
                 }
-                var newCandidateWords = new List<string>();
-                foreach (var word in candidateWords)
+
+                // didn't find answer, filter candidateList based on matched result
+                var newCandidateList = new List<int>();
+                foreach (var idx in candidateList)
                 {
-                    if (GetMatchCount(word, candidateWord) == matchCount)
+                    if (matchCount[idx, candidate] == result)
                     {
-                        newCandidateWords.Add(word);
+                        newCandidateList.Add(idx);
                     }
                 }
-                candidateWords = newCandidateWords;
+                candidateList = newCandidateList;
             }
         }
 

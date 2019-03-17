@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace _14
+namespace _0014
 {
     public class Solution {
         private bool IsSame(string[] strs, int i)

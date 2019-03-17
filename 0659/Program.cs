@@ -16,7 +16,7 @@ namespace _0659
             foreach (var num in nums)
             {
                 // use up
-                if (counter.GetValueOrDefault(num, 0) == 0)
+                if (counter[num] == 0)
                 {
                     continue;
                 }
