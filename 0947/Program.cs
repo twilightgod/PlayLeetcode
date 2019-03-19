@@ -6,15 +6,18 @@ namespace _0947
     public class UnionFind
     {
         private Dictionary<int, int> parent = new Dictionary<int, int>();
-        private Dictionary<int, int> size = new Dictionary<int, int>();
+
+        private Dictionary<int, int> rank = new Dictionary<int, int>();
+
+        private int count = 0;
 
         public int Find(int x)
         {
             if (!parent.ContainsKey(x))
             {
                 parent[x] = x;
-                // only stones get size == 1
-                size[x] = x >= 0 ? 1 : 0;
+                rank[x] = 0;
+                count++;
             }
             else
             {
@@ -31,25 +34,31 @@ namespace _0947
         {
             var px = Find(x);
             var py = Find(y);
-            
+
             if (px == py)
             {
                 return;
             }
 
-            // make sure to merge to stone
-            if (py < 0)
+            if (rank[x] < rank[y])
             {
-                (px, py) = (py, px);
+                parent[px] = py;
             }
-
-            parent[px] = py;
-            size[py] += size[px];
+            else if (rank[x] > rank[y])
+            {
+                parent[py] = px;
+            }
+            else
+            {
+                parent[py] = px;
+                rank[x]++;
+            }
+            count--;
         }
 
-        public int GetSize(int x)
+        public int GetCount()
         {
-            return size[x];
+            return count;
         }
     }
 
@@ -58,32 +67,15 @@ namespace _0947
         public int RemoveStones(int[][] stones)
         {
             var uf = new UnionFind();
-            for (var i = 0; i < stones.GetLength(0); ++i)
+            var n = stones.GetLength(0);
+
+            for (var i = 0; i <n ; ++i)
             {
-                var row = stones[i][0];
-                var col = stones[i][1];
-                // stone has positive id
-                var stoneId = row * 10000 + col;
-                // row and col have negtive id
-                var rowId = - row - 20000;
-                var colId = - col - 30000;
-                uf.Union(stoneId, rowId);
-                uf.Union(stoneId, colId);
+                // ~y is used here for encoding
+                uf.Union(stones[i][0], ~stones[i][1]);
             }
 
-            var answer = 0;
-            for (var i = 0; i < stones.GetLength(0); ++i)
-            {
-                var row = stones[i][0];
-                var col = stones[i][1];
-                var stoneId = row * 10000 + col;
-                if (uf.Find(stoneId) == stoneId)
-                {
-                    answer += uf.GetSize(stoneId) - 1;
-                }
-            }
-            
-            return answer;
+            return n - uf.GetCount();
         }
     }
 
