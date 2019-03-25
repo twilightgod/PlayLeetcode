@@ -22,23 +22,24 @@ namespace _0076
                 charCounts[c] = charCounts.GetValueOrDefault(c, 0) + 1;
             }
 
-            // nonZeros means the number of non zero count chars, it's 0 means current substring s[l..r] contains t
-            var nonZeros = charCounts.Count;
+            // how many distinct chars need to be matched
+            var unMatched = charCounts.Count;
             var l = 0;
             for (var r = 0; r < s.Length; ++r)
             {
+                // t contians s[r]
                 if (charCounts.ContainsKey(s[r]) && --charCounts[s[r]] == 0)
                 {
                     // found a solution
-                    if (--nonZeros == 0)
+                    if (--unMatched == 0)
                     {
-                        // move l
+                        // try to move l as far as possible in order to get the shortest answer
                         // need to consider following cases for t = "abc"
                         // aabc
                         // abbc
                         // ddabc
                         // addbc
-                        while (l <= r && nonZeros == 0)
+                        while (l <= r && unMatched == 0)
                         {
                             // update minLen and answer
                             if (minLen > r - l + 1)
@@ -51,10 +52,10 @@ namespace _0076
                             {
                                 l++;
                             }
-                            // moving l results have a target char > 0 (need 1 more)
-                            else if (++charCounts[s[l++]] > 0)
+                            // update count for s[l], if it's larger than 0, it means we have an unmatched char
+                            else if (++charCounts[s[l++]] > 0) 
                             {
-                                ++nonZeros;
+                                ++unMatched;
                             }
                         }
                     }
@@ -70,7 +71,7 @@ namespace _0076
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            new Solution().MinWindow("bba", "ba");
+            Console.WriteLine(new Solution().MinWindow("bba", "ba"));
         }
     }
 }
