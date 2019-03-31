@@ -21,7 +21,7 @@ namespace _0337
             // f[i] means the max sum for subtree whose root is i
             var f = new Dictionary<TreeNode, int>();
             
-            return Math.Max(DP(root, f), DP(root, f));
+            return DP(root, f);
         }
 
         private int DP(TreeNode root, Dictionary<TreeNode, int> f)
