@@ -67,7 +67,7 @@ namespace _0336
 
     class Program
     {
-        static void Main(string[] args)
+        static void Main1(string[] args)
         {
             new Solution().PalindromePairs(new string[]{"abc", ""});
             Console.WriteLine("Hello World!");
