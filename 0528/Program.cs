@@ -24,21 +24,12 @@ namespace _0528
         {
             // [min, max)
             var ran = generator.Next(1, sum[n - 1] + 1);
-            var l = 0;
-            var r = n;
-            while (l < r)
+            var idx = Array.BinarySearch(sum, ran);
+            if (idx < 0)
             {
-                var m = l + (r - l) / 2;
-                if (sum[m] >= ran)
-                {
-                    r = m;
-                }
-                else
-                {
-                    l = m + 1;
-                }
+                idx = ~idx;
             }
-            return l;
+            return idx;
         }
     }
 
