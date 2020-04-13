@@ -3,44 +3,57 @@ using System.Collections.Generic;
 
 namespace _0133
 {
-    /**
- * Definition for undirected graph. */
-    public class UndirectedGraphNode
+    public class Node
     {
-        public int label;
-        public IList<UndirectedGraphNode> neighbors;
-        public UndirectedGraphNode(int x) { label = x; neighbors = new List<UndirectedGraphNode>(); }
-    };
+        public int val;
+        public IList<Node> neighbors;
+
+        public Node()
+        {
+            val = 0;
+            neighbors = new List<Node>();
+        }
+
+        public Node(int _val)
+        {
+            val = _val;
+            neighbors = new List<Node>();
+        }
+
+        public Node(int _val, List<Node> _neighbors)
+        {
+            val = _val;
+            neighbors = _neighbors;
+        }
+    }
 
     public class Solution
     {
-        public UndirectedGraphNode CloneGraph(UndirectedGraphNode node)
+        public Node CloneGraph(Node node)
         {
             if (node == null)
             {
                 return null;
             }
-            
-            var clonedNodeDictionary = new Dictionary<int, UndirectedGraphNode>();
+
+            var clonedNodeDictionary = new Dictionary<int, Node>();
 
             return CloneNode(node, clonedNodeDictionary);
         }
 
-        private UndirectedGraphNode CloneNode(UndirectedGraphNode node, Dictionary<int, UndirectedGraphNode> clonedNodeDictionary)
+        private Node CloneNode(Node node, Dictionary<int, Node> clonedNodeDictionary)
         {
-            var clonedNode = new UndirectedGraphNode(node.label);
-            clonedNodeDictionary[node.label] = clonedNode;
+            if (clonedNodeDictionary.ContainsKey(node.val))
+            {
+                return clonedNodeDictionary[node.val];
+            }
+
+            var clonedNode = new Node(node.val);
+            clonedNodeDictionary[node.val] = clonedNode;
 
             foreach (var neighbor in node.neighbors)
             {
-                if (clonedNodeDictionary.ContainsKey(neighbor.label))
-                {
-                    clonedNode.neighbors.Add(clonedNodeDictionary[neighbor.label]);
-                }
-                else
-                {
-                    clonedNode.neighbors.Add(CloneNode(neighbor, clonedNodeDictionary));
-                }
+                clonedNode.neighbors.Add(CloneNode(neighbor, clonedNodeDictionary));
             }
 
             return clonedNode;
@@ -51,9 +64,9 @@ namespace _0133
     {
         static void Main(string[] args)
         {
-            var node0 = new UndirectedGraphNode(0);
-            var node1 = new UndirectedGraphNode(1);
-            var node2 = new UndirectedGraphNode(2);
+            var node0 = new Node(0);
+            var node1 = new Node(1);
+            var node2 = new Node(2);
             node0.neighbors.Add(node1);
             node0.neighbors.Add(node2);
             node1.neighbors.Add(node2);
