@@ -48,9 +48,7 @@ namespace _0148
 
         private void Swap(ListNode node1, ListNode node2)
         {
-            var t = node1.val;
-            node1.val = node2.val;
-            node2.val = t;
+            (node1.val, node2.val) = (node2.val, node1.val);
         }
     }
 
